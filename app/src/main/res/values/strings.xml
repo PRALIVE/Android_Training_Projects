@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Recyclerview</string>
+    <string name="api_key">https://api.nasa.gov/planetary/apod?api_key=eiV3X6pLhMcq4c2nNqPa4BkaYFh8dtZmJVuvrBbC</string>
+</resources>
