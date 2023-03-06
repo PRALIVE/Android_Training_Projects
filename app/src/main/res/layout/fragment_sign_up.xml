@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".SignUp">
+
+   <androidx.constraintlayout.widget.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+       <Button
+           android:id="@+id/btnGoogle"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:layout_marginTop="40dp"
+           android:drawableLeft="@drawable/rresouce"
+           android:text="Sign up with Google"
+           android:textSize="15dp"
+           android:textColor="@color/black"
+           android:textAllCaps="false"
+           android:padding="20dp"
+           android:background="@drawable/google_bg_round_corner"
+           android:layout_marginHorizontal="10dp"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent" />
+
+       <Button
+           android:id="@+id/btnFacebook"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_marginHorizontal="10dp"
+           android:layout_marginTop="18dp"
+           android:layout_weight="1"
+           android:background="@drawable/bg_round_corner"
+           android:drawableLeft="@drawable/facebook1"
+           android:padding="20dp"
+           android:text="Sign up with Facebook"
+           android:textAllCaps="false"
+           android:textColor="@color/white"
+           android:textSize="15dp"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toBottomOf="@+id/btnGoogle" />
+
+       <LinearLayout
+           android:id="@+id/linearlayout"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal"
+           android:layout_marginHorizontal="10dp"
+           android:layout_marginTop="10dp"
+           app:layout_constraintTop_toBottomOf="@+id/btnFacebook">
+           <View
+               android:layout_width="0dp"
+               android:layout_height="2dp"
+               android:layout_weight="0.4"
+               android:layout_gravity="center_vertical"
+               android:background="@color/black"/>
+           <TextView
+               android:id="@+id/text"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="OR"
+               android:fontFamily="sans-serif-condensed"
+               android:textColor="@color/black"
+               android:padding="10dp" />
+
+           <View
+               android:layout_width="0dp"
+               android:layout_height="2dp"
+               android:layout_weight="0.4"
+               android:layout_gravity="center_vertical"
+               android:background="@color/black" />
+       </LinearLayout>
+
+
+       <Button
+           android:id="@+id/btnEmail"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_weight="1"
+           android:drawableLeft="@drawable/email1"
+           android:text="Sign up with Email"
+           android:layout_marginTop="10dp"
+           android:padding="20dp"
+           android:layout_marginHorizontal="10dp"
+           android:textColor="@color/black"
+           android:textAllCaps="false"
+           android:background="@drawable/login_bg_round_corner"
+           app:layout_constraintTop_toBottomOf="@+id/linearlayout"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           tools:layout_editor_absoluteX="0dp"
+           tools:layout_editor_absoluteY="100dp" />
+   </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
