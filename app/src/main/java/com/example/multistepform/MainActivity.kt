@@ -14,7 +14,6 @@ import com.example.multistepform.database.UserDatabase
 import com.example.multistepform.datamodels.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
@@ -25,7 +24,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var next : Button
     lateinit var submit : Button
     lateinit var refresh : Button
-    lateinit var swiperefresh : SwipeRefreshLayout
+    lateinit var swipeRefresh : SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,20 +35,20 @@ class MainActivity : AppCompatActivity() {
             this,
             UserDatabase::class.java,"SavedInfo"
         ).fallbackToDestructiveMigration().build()
-        val roomdao = room.userDao()
+        val roomDao = room.userDao()
 
         CoroutineScope(Dispatchers.IO).launch {
-            if(roomdao.getUserById(0)!=null){
-                val user1 = roomdao.getUserById(0)!!
-                user.firstname = user1.firstname
-                user.secondname = user1.secondname
+            if(roomDao.getUserById(0)!=null){
+                val user1 = roomDao.getUserById(0)!!
+                user.firstName = user1.firstName
+                user.secondName = user1.secondName
                 user.email = user1.email
                 user.phone = user1.phone
                 user.address1 = user1.address1
                 user.address2 = user1.address1
                 user.address3 = user1.address3
             }else{
-                roomdao.insertArticles(user)
+                roomDao.insertArticles(user)
             }
 
         }
@@ -59,22 +58,22 @@ class MainActivity : AppCompatActivity() {
         next = findViewById<Button>(R.id.next)
         submit = findViewById<Button>(R.id.submit)
         refresh = findViewById<Button>(R.id.refresh)
-        swiperefresh = findViewById(R.id.swipe_refresh_layout)
+        swipeRefresh = findViewById(R.id.swipe_refresh_layout)
 
-        swiperefresh.setOnRefreshListener {
+        swipeRefresh.setOnRefreshListener {
             CoroutineScope(Dispatchers.IO).launch{
-                roomdao.updateUser(user)
-                swiperefresh.isRefreshing = false
+                roomDao.updateUser(user)
+                swipeRefresh.isRefreshing = false
             }
         }
 
 
-        checkbuttons()
+        checkButtons()
         val myAdapter = ViewPagerAdapter(supportFragmentManager, lifecycle)
 
-        myAdapter.addFragment(firstFragment(user,roomdao))
-        myAdapter.addFragment(secondFragment(user,roomdao))
-        myAdapter.addFragment(thirdFragment(user,roomdao))
+        myAdapter.addFragment(FirstFragment(user,roomDao))
+        myAdapter.addFragment(SecondFragment(user,roomDao))
+        myAdapter.addFragment(ThirdFragment(user,roomDao))
 
         viewPager.adapter = myAdapter
 
@@ -82,32 +81,34 @@ class MainActivity : AppCompatActivity() {
 
         next.setOnClickListener(){
            val  currentindex : Int = viewPager.currentItem
-            val fragment : MyFragment = myAdapter.getfragment(currentindex)
-            Log.d("savedinformation",fragment.saveinfo().toString())
-            if(fragment.saveinfo()){
-                viewPager.setCurrentItem(viewPager.currentItem + 1,true)
-                checkbuttons()
+            val currentFragment = myAdapter.getFragment(currentindex)
+            Log.d("savedinformation",(currentFragment as ValidateInfo).isValid().toString())
+            if((currentFragment as ValidateInfo).isValid()){
+                viewPager
+
+                    .setCurrentItem(viewPager.currentItem + 1,true)
+                checkButtons()
             }
         }
 
         previous.setOnClickListener(){
             viewPager.setCurrentItem(viewPager.currentItem - 1,true)
-            checkbuttons()
+            checkButtons()
         }
 
         submit.setOnClickListener {
             val builder = AlertDialog.Builder(this)
-            builder.setTitle("Information Filled").setMessage("Name: ${user.firstname} ${user.secondname}\nPhone: ${user.phone}\nEmail: ${user.email}\nAddress: ${user.address1}, ${user.address2}, ${user.address3}")
+            builder.setTitle("Information Filled").setMessage("Name: ${user.firstName} ${user.secondName}\nPhone: ${user.phone}\nEmail: ${user.email}\nAddress: ${user.address1}, ${user.address2}, ${user.address3}")
                 .setPositiveButton("OK"){ _, id ->
                     //save it to database
-                    val fragment1 : MyFragment = myAdapter.getfragment(0)
-                    val fragment2 : MyFragment = myAdapter.getfragment(1)
-                    val fragment3 : MyFragment = myAdapter.getfragment(2)
-                    fragment1.updateallfiels()
-                    fragment2.updateallfiels()
-                    fragment3.updateallfiels()
+                    val fragment1 = myAdapter.getFragment(0)
+                    val fragment2 = myAdapter.getFragment(1)
+                    val fragment3 = myAdapter.getFragment(2)
+                    (fragment1 as FirstFragment).updateAllFields()
+                    (fragment2 as SecondFragment).updateAllFields()
+                    (fragment3 as ThirdFragment).updateAllFields()
                     CoroutineScope(Dispatchers.IO).launch{
-                        roomdao.delete(user)
+                        roomDao.delete(user)
                     }
                 }
             val dialog = builder.create()
@@ -119,7 +120,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun checkbuttons(){
+    fun checkButtons(){
         if(viewPager.currentItem == 0){
             refresh.setVisibility(View.VISIBLE)
             previous.setVisibility(View.GONE)

@@ -1,6 +1,6 @@
 package com.example.multistepform
 
-interface MyFragment {
-   fun saveinfo() : Boolean
-   fun updateallfiels()
+interface ValidateInfo {
+   fun isValid() : Boolean
+   fun updateAllFields()
 }

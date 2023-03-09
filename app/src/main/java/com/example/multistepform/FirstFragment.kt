@@ -15,10 +15,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class secondFragment(val user : User, val roomdao : UserDao) : Fragment(), MyFragment {
-    lateinit var emailview : EditText
-    lateinit var phoneview  :EditText
-    private val emailPattern = "^[\\w-_.+]*[\\w-_.]@([\\w-]+\\.)+[\\w]+[\\w]\$"
+class FirstFragment(val user : User, val roomDao : UserDao ) : Fragment(), ValidateInfo {
+    lateinit var firstNameField : EditText
+    lateinit var secondNameField: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,48 +27,45 @@ class secondFragment(val user : User, val roomdao : UserDao) : Fragment(), MyFra
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        Log.d("oncreateview","onCreateView is invoked on fragment 2")
         // Inflate the layout for this fragment
-        val view:View =  inflater.inflate(R.layout.fragment_second, container, false)
-        emailview = view.findViewById(R.id.email)
-        phoneview = view.findViewById(R.id.phone)
-        emailview.setText(user.email)
-        phoneview.setText(user.phone)
+        Log.d("oncreateview","onCreateView is invoked on fragment 1")
+        val view :View = inflater.inflate(R.layout.fragment_first, container, false)
+        firstNameField = view.findViewById(R.id.firstname)
+        secondNameField = view.findViewById(R.id.secondname)
+        firstNameField.setText(user.firstName)
+        secondNameField.setText(user.secondName)
 
-        emailview.addTextChangedListener(object : TextWatcher {
+        //maintaining firstname field
+        firstNameField.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val b :String = "ram"
             }
-
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 if (charSequence.length > 0) {
-                    user.email = charSequence.toString()
-                    validemail(charSequence.toString())
+                    user.firstName = charSequence.toString()
                     CoroutineScope(Dispatchers.IO).launch{
-                        roomdao.updateUser(user)
+                        roomDao.updateUser(user)
                     }
                 }
             }
-
             override fun afterTextChanged(p0: Editable?) {
                 val a :String = "ram"
             }
         })
 
-        phoneview.addTextChangedListener(object : TextWatcher {
+        //maintaining secondname field
+        secondNameField.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val b :String = "ram"
             }
-
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 if (charSequence.length > 0) {
-                    user.phone = charSequence.toString()
+                    user.secondName = charSequence.toString()
                     CoroutineScope(Dispatchers.IO).launch{
-                        roomdao.updateUser(user)
+                        roomDao.updateUser(user)
                     }
                 }
             }
-
             override fun afterTextChanged(p0: Editable?) {
                 val a :String = "ram"
             }
@@ -77,32 +73,30 @@ class secondFragment(val user : User, val roomdao : UserDao) : Fragment(), MyFra
         return view
     }
 
-    fun validemail(email : String) : Boolean{
-        if(email.matches(emailPattern.toRegex())){
-            emailview.setBackgroundResource(R.drawable.border_field)
+    override fun isValid() : Boolean{
+        if(user.firstName != "" && user.secondName!= ""){
+            firstNameField.setBackgroundResource(R.drawable.border_field)
+            secondNameField.setBackgroundResource(R.drawable.border_field)
             return true
         }else{
-            emailview.setBackgroundResource(R.drawable.error_border)
-            return false
-        }
-    }
-
-    override fun saveinfo():Boolean{
-        if(validemail(user.email) && user.phone !=""){
-            phoneview.setBackgroundResource(R.drawable.border_field)
-            return true
-        }else{
-            if(user.phone==""){
-                phoneview.setBackgroundResource(R.drawable.error_border)
+            if(user.firstName == ""){
+                firstNameField.setBackgroundResource(R.drawable.error_border)
+            }else{
+                firstNameField.setBackgroundResource(R.drawable.border_field)
+            }
+            if(user.secondName == "") {
+                secondNameField.setBackgroundResource(R.drawable.error_border)
+            }else{
+                secondNameField.setBackgroundResource(R.drawable.border_field)
             }
             return false
         }
     }
 
-    override fun updateallfiels() {
-        user.email = ""
-        user.phone = ""
-        emailview.setText("")
-        phoneview.setText("")
+    override fun updateAllFields() {
+        user.firstName = ""
+        user.secondName = ""
+        firstNameField.setText("")
+        secondNameField.setText("")
     }
 }

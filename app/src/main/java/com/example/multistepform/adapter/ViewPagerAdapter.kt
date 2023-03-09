@@ -4,7 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.multistepform.MyFragment
 
 class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
     FragmentStateAdapter(fragmentManager, lifecycle) {
@@ -21,7 +20,7 @@ class ViewPagerAdapter(fragmentManager: FragmentManager, lifecycle: Lifecycle) :
         return fragmentList.size
     }
 
-    fun getfragment(position: Int) : MyFragment{
-        return fragmentList[position] as MyFragment
+    fun getFragment(position: Int) : Fragment{
+        return fragmentList[position]
     }
 }

@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase
 import com.example.multistepform.datamodels.User
 
 
-@Database(entities = [User::class], version = 2, exportSchema = false)
+@Database(entities = [User::class], version = 3, exportSchema = false)
  abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao() : UserDao
 }
