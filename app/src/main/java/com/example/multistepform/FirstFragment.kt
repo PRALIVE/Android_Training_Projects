@@ -9,15 +9,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.databinding.DataBindingUtil
 import com.example.multistepform.database.UserDao
+import com.example.multistepform.databinding.FragmentFirstBinding
 import com.example.multistepform.datamodels.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class FirstFragment(val user : User, val roomDao : UserDao ) : Fragment(), ValidateInfo {
-    lateinit var firstNameField : EditText
-    lateinit var secondNameField: EditText
+class FirstFragment(val User : User, val roomDao : UserDao ) : Fragment(), ValidateInfo {
+//    lateinit var firstNameField : EditText
+//    lateinit var secondNameField: EditText
+    lateinit var binding: FragmentFirstBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,22 +32,19 @@ class FirstFragment(val user : User, val roomDao : UserDao ) : Fragment(), Valid
     ): View? {
         // Inflate the layout for this fragment
         Log.d("oncreateview","onCreateView is invoked on fragment 1")
-        val view :View = inflater.inflate(R.layout.fragment_first, container, false)
-        firstNameField = view.findViewById(R.id.firstname)
-        secondNameField = view.findViewById(R.id.secondname)
-        firstNameField.setText(user.firstName)
-        secondNameField.setText(user.secondName)
+        binding=DataBindingUtil.inflate(inflater, R.layout.fragment_first, container, false);
+        binding.user = User
 
         //maintaining firstname field
-        firstNameField.addTextChangedListener(object : TextWatcher {
+        binding.firstname.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val b :String = "ram"
             }
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 if (charSequence.length > 0) {
-                    user.firstName = charSequence.toString()
+                    User.firstName = charSequence.toString()
                     CoroutineScope(Dispatchers.IO).launch{
-                        roomDao.updateUser(user)
+                        roomDao.updateUser(User)
                     }
                 }
             }
@@ -54,15 +54,15 @@ class FirstFragment(val user : User, val roomDao : UserDao ) : Fragment(), Valid
         })
 
         //maintaining secondname field
-        secondNameField.addTextChangedListener(object : TextWatcher {
+        binding.secondname.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
                 val b :String = "ram"
             }
             override fun onTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {
                 if (charSequence.length > 0) {
-                    user.secondName = charSequence.toString()
+                    User.secondName = charSequence.toString()
                     CoroutineScope(Dispatchers.IO).launch{
-                        roomDao.updateUser(user)
+                        roomDao.updateUser(User)
                     }
                 }
             }
@@ -70,33 +70,33 @@ class FirstFragment(val user : User, val roomDao : UserDao ) : Fragment(), Valid
                 val a :String = "ram"
             }
         })
-        return view
+        return binding.root
     }
 
     override fun isValid() : Boolean{
-        if(user.firstName != "" && user.secondName!= ""){
-            firstNameField.setBackgroundResource(R.drawable.border_field)
-            secondNameField.setBackgroundResource(R.drawable.border_field)
+        if(User.firstName != "" && User.secondName!= ""){
+            binding.firstname.setBackgroundResource(R.drawable.border_field)
+            binding.secondname.setBackgroundResource(R.drawable.border_field)
             return true
         }else{
-            if(user.firstName == ""){
-                firstNameField.setBackgroundResource(R.drawable.error_border)
+            if(User.firstName == ""){
+                binding.firstname.setBackgroundResource(R.drawable.error_border)
             }else{
-                firstNameField.setBackgroundResource(R.drawable.border_field)
+                binding.firstname.setBackgroundResource(R.drawable.border_field)
             }
-            if(user.secondName == "") {
-                secondNameField.setBackgroundResource(R.drawable.error_border)
+            if(User.secondName == "") {
+                binding.firstname.setBackgroundResource(R.drawable.error_border)
             }else{
-                secondNameField.setBackgroundResource(R.drawable.border_field)
+                binding.secondname.setBackgroundResource(R.drawable.border_field)
             }
             return false
         }
     }
 
     override fun updateAllFields() {
-        user.firstName = ""
-        user.secondName = ""
-        firstNameField.setText("")
-        secondNameField.setText("")
+        User.firstName = ""
+        User.secondName = ""
+        binding.firstname.setText("")
+        binding.secondname.setText("")
     }
 }

@@ -6,11 +6,13 @@ import android.util.Log
 import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.AlertDialog
+import androidx.databinding.DataBindingUtil
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.viewpager2.widget.ViewPager2
 import com.example.multistepform.adapter.ViewPagerAdapter
 import com.example.multistepform.database.UserDatabase
+import com.example.multistepform.databinding.ActivityMainBinding
 import com.example.multistepform.datamodels.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,10 +27,18 @@ class MainActivity : AppCompatActivity() {
     lateinit var submit : Button
     lateinit var refresh : Button
     lateinit var swipeRefresh : SwipeRefreshLayout
+    lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = DataBindingUtil.setContentView(this,R.layout.activity_main)
+        viewPager = binding.viewpager
+        previous = binding.previous
+        next = binding.next
+        submit = binding.submit
+        swipeRefresh = binding.swipeRefreshLayout
+        refresh = binding.refresh
+        //setContentView(R.layout.activity_main)
 
         //first make a instance of database
         val room = Room.databaseBuilder(
@@ -53,12 +63,12 @@ class MainActivity : AppCompatActivity() {
 
         }
 
-        viewPager = findViewById<ViewPager2>(R.id.viewpager)
-        previous = findViewById<Button>(R.id.previous)
-        next = findViewById<Button>(R.id.next)
-        submit = findViewById<Button>(R.id.submit)
-        refresh = findViewById<Button>(R.id.refresh)
-        swipeRefresh = findViewById(R.id.swipe_refresh_layout)
+//        viewPager = findViewById<ViewPager2>(R.id.viewpager)
+//        previous = findViewById<Button>(R.id.previous)
+//        next = findViewById<Button>(R.id.next)
+//        submit = findViewById<Button>(R.id.submit)
+//        refresh = findViewById<Button>(R.id.refresh)
+//        swipeRefresh = findViewById(R.id.swipe_refresh_layout)
 
         swipeRefresh.setOnRefreshListener {
             CoroutineScope(Dispatchers.IO).launch{
@@ -116,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         refresh.setOnClickListener {
-            recreate()
+
         }
     }
 
